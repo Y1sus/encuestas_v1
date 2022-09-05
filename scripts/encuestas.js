@@ -66,6 +66,93 @@ var createModalEditarEncuesta = (
   document.getElementById("txtDesc").value = descripcion_encuesta;
 };
 
+var showModalAgregarEncuesta = () => {
+  createModalAgregarEncuesta();
+  $("#modalAgregar").modal();
+};
+
+var createModalAgregarEncuesta = () => {
+  var modal = `
+        <div class="modal fade" role="dialog" id="modalAgregar">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Agregar Encuesta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <table class="table table-borderless " >
+                            <tbody>
+                              <tr>
+                                <td>
+                                    <div class="form-group row justify-content-center">
+                                        <label for="txtDesc" class="col-sm-1-12 col-form-label">Nombre: </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group row justify-content-center">
+                                        <div class="col-sm-1-12">
+                                            <input class="form-control"  id="txtNombreAdd" name="txtDesc" rows="3"></input>
+                                        </div>
+                                    </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                    <div class="form-group row justify-content-center">
+                                        <label for="txtDesc" class="col-sm-1-12 col-form-label">Descripción: </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group row justify-content-center">
+                                        <div class="col-sm-1-12">
+                                            <textarea class="form-control"  id="txtDescAdd" name="txtDesc" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                        </table>
+                       
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="agregarEncuesta();">Agregar</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    `;
+  document.getElementById("modalAgregarEncuesta").innerHTML = modal;
+};
+
+var agregarEncuesta = () => {
+  var usuario_id = sessionStorage.getItem("usuario_id");
+  var nombre_encuesta = document.getElementById("txtNombreAdd").value;
+  var descripcion_encuesta = document.getElementById("txtDescAdd").value;
+
+  var data = {
+    action: "agregarEncuesta",
+    usuario_id,
+    nombre_encuesta,
+    descripcion_encuesta,
+  };
+
+  if (usuario_id !== null) {
+    if (nombre_encuesta !== "" && descripcion_encuesta !== "") {
+      $.post("./api/encuestas.php", data, (response) => {
+        response = JSON.parse(response);
+        if (response.status == "ok") {
+          window.location.reload();
+        }
+      });
+    }
+  }
+};
+
 var obtenerEncuestas = () => {
   var usuario_id = sessionStorage.getItem("usuario_id");
   var data = {
@@ -96,11 +183,11 @@ var createTr = (data) => {
         <tr>
             <td scope="row">${encuesta_id}</td>
             <td>${nombre_encuesta}</td>
-            <td>${created_at.date}</td>
+            <td>${created_at}</td>
             <th>
                 <i type="button" class="fa fa-edit mr-3" style="color:#AEB404;" onclick="showModalEditar('${encuesta_id}', '${nombre_encuesta}', '${descripcion_encuesta}')"></i>
                 <i type="button" class="fa fa-trash mr-3" style="color:red;" onclick="showModalEliminar('${encuesta_id}')"></i>
-                <i type="button" class="fa fa-share mr-3" style="color:blue;" ></i>
+                <i type="button" class="fa fa-share mr-3" onclick="copiarEnlace('${encuesta_id}');" style="color:blue;" ></i>
                 <i type="button" class="fa fa-eye" onclick="mostrarDetallesEncuesta('${encuesta_id}', '${nombre_encuesta}')"></i>
             </th>
         </tr>
@@ -181,6 +268,17 @@ var mostrarDetallesEncuesta = (encuesta_id, encuesta_nombre) => {
   sessionStorage.setItem("encuesta_nombre", encuesta_nombre);
   window.location.href = "adminpreguntas.html";
 };
+
+var copiarEnlace = (encuesta_id) => {
+  var url = 'http://localhost/encuesta/encuesta.html?encuesta_id='+ encuesta_id + '&usuario_id=' + sessionStorage.getItem('usuario_id');
+  var aux = document.createElement("input");
+  aux.setAttribute("value", url);
+  document.body.appendChild(aux);
+  aux.select();
+  document.execCommand("copy");
+  document.body.removeChild(aux);
+  alert('Link copiado al portapapeles');
+}
 
 var validateSession = () => {
   //Is the user authenticated?

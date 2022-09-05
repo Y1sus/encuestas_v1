@@ -22,15 +22,15 @@ var login = () => {
           //   };
 
           var response = JSON.parse(response);
-          console.log(response.data);
           if (response.status === "ok") {
             sessionStorage.setItem("AuthenticationState", "Authenticated");
-            sessionStorage.setItem("usuario_id", response.data.usuario_id);
+            sessionStorage.setItem("usuario_id", response.data[0].usuario_id);
+            
             // sessionStorage.setItem(
             //   "AutheticationExpires",
             //   Date.now.addHours(1)
             // );
-            window.open("./index.html", "_self");
+            window.open("./encuestasadmin.html", "_self");
             // window.location.href = "http://localhost/encuesta/index.html";
             // console.log("Usted está logueado");
           } else {

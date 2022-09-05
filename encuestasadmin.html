@@ -45,16 +45,23 @@
 Encuestas</span></a
             >
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-user" style="color: white;"></i> Usuario</a>
+           <!-- Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+              <i class="fas fa-user" style="color: white;"></i> Usuario
+            </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#" onclick="logout()">Cerrar Sesión</a>
+              <!-- <a class="dropdown-item" href="#">Link 2</a>
+              <a class="dropdown-item" href="#">Link 3</a> -->
+            </div>
           </li>
-          
         </ul>
       </div>
     </nav>
     <div class="container mt-5">
         <div class="row justify-content-end mb-5">
-            <a type="button" class="btn " style="background-color: #0e4d1b; color: white;"><i class="fa fa-plus" aria-hidden="true"></i> Agregar Encuesta</a>
+            <a type="button" class="btn " onclick="showModalAgregarEncuesta()" style="background-color: #0e4d1b; color: white;"><i class="fa fa-plus" aria-hidden="true"></i> Agregar Encuesta</a>
         </div>
         <table class="table table-striped">
           <thead >
@@ -70,6 +77,7 @@ Encuestas</span></a
         </table> 
         <div id="modalEditarEncuesta"></div>
         <div id="modalEliminarEncuesta"></div>
+        <div id="modalAgregarEncuesta"></div>
     </div>
   </body>
 </html>

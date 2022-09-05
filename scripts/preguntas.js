@@ -19,21 +19,95 @@ var obtenerPreguntas = () => {
   });
 };
 
+var showModalAgregar = () => {
+  createModalAgregarPregunta();
+  $("#modalAgregar").modal();
+}
+
+var createModalAgregarPregunta = () =>{
+  var modal = `
+        <div class="modal fade" role="dialog" id="modalAgregar">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Agregar Pregunta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <table class="table table-borderless " >
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="form-group row justify-content-center">
+                                            <label for="txtDesc" class="col-sm-1-12 col-form-label">Descripción </label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group row justify-content-center">
+                                            <div class="col-sm-1-12">
+                                                <textarea class="form-control"  id="txtDescAdd" name="txtDesc" rows="3"></textarea>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                       
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="agregarPregunta();">Agregar</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    `;
+  document.getElementById("modalAgregarPregunta").innerHTML = modal;
+}
+
+var agregarPregunta = () => {
+  var pregunta = document.getElementById("txtDescAdd").value;
+  var encuesta_id = sessionStorage.getItem("encuesta_id"); 
+  var data = {
+    action:'agregarPregunta',
+    pregunta,
+    encuesta_id
+  }
+
+  if(pregunta !== ""){
+    $.post('./api/preguntas.php', data, (response) => {
+      response = JSON.parse(response);
+      console.log(response);
+      if(response.status === "ok"){
+        window.location.reload();
+      }else{
+        console.log("No se pudo agregar la pregunta");
+      }
+    })
+  }
+}
+
+
 var createTr = (data, encuesta_nombre) => {
   var tr = "";
+  var cont = 1;
   data.map((pregunta) => {
     var { pregunta_id, pregunta_descripcion, created_at } = pregunta;
     tr += `
         <tr>
-            <td scope="row">${pregunta_id}</td>
+            <td scope="row">${cont}</td>
             <td>${pregunta_descripcion}</td>
-            <td>${created_at.date}</td>
+            <td>${created_at}</td>
             <th>
                 <i type="button" class="fa fa-edit mr-3" style="color:#AEB404;" onclick="showModalEditarPregunta('${pregunta_descripcion}','${pregunta_id}')"></i>
                 <i type="button" class="fa fa-trash mr-3" style="color:red;" onclick="showModalEliminar('${pregunta_id}')"></i>
             </th>
         </tr>
     `;
+    cont++;
   });
   document.getElementById(
     "nombreEncuesta"

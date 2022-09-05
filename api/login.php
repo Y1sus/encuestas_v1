@@ -15,22 +15,17 @@ function login($email, $password) {
     $hashPass = md5($password);
     include_once('database.php');
     $query = 'SELECT usuario_id FROM usuarios where email=? and password=? and deleted=1';
-    $params = array($email, $hashPass);
-    $options =  array("Scrollable" => SQLSRV_CURSOR_KEYSET);
-    $result = sqlsrv_query($conn, $query, $params, $options);
 
-    $usuario = sqlsrv_num_rows($result);
+    $result = $conn->prepare($query);
+    $result->execute(array($email, $hashPass));
 
-    $row = sqlsrv_fetch_object($result);
-    
-
-    if ($usuario === false) {
-        die(print_r(sqlsrv_errors(), true));
-    } else {
-        if ($usuario > 0)
-            echo json_encode(array("status" => "ok", "data" => $row));
-        else
-            echo json_encode(array("status" => "fail", "message" => "No se encuentra el usuario"));
+    if ($result === false) {
+        die(print_r($conn->errorInfo(), true));
     }
-    sqlsrv_close($conn);
+
+    $data = [];
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        array_push($data, $row);
+    }
+    echo json_encode(array("status" => "ok", "data" => $data));
 }
