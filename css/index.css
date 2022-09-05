@@ -1,0 +1,38 @@
+.alinearHorizontal {
+  display: flex;
+  margin: 0 auto;
+  /* justify-content: center; */
+}
+.centrar {
+  margin: 0px auto 0px auto;
+  /* text-align: center; */
+}
+
+body,
+html {
+  height: 100%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+button {
+  display: flex;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.logoAmasa {
+  width: 160px;
+  height: 110px;
+  align-items: center;
+  margin-bottom: auto;
+}
+
+img {
+  width: 360px;
+  height: 100px;
+}

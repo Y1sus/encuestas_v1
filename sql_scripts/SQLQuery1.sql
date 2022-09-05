@@ -1,0 +1,1 @@
+insert into usuarios (email, password) values('jmontalvo@amasa.mx','81dc9bdb52d04dc20036dbd8313ed055');
